@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Background Remover</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f5f7fa;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        input, button {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        img {
+            max-width: 300px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #loader {
+            display: none;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧠 AI Background Remover</h1>
+
+    <div class="container">
+        <form id="uploadForm">
+            <input type="file" id="imageInput" required>
+            <br>
+            <button type="submit">Remove Background</button>
+        </form>
+
+        <p id="loader">⏳ Processing... please wait</p>
+
+        <div class="preview-container">
+            <div>
+                <h3>Original</h3>
+                <img id="preview" src="" />
+            </div>
+
+            <div>
+                <h3>Result</h3>
+                <img id="output" src="" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById("imageInput");
+        const preview = document.getElementById("preview");
+        const output = document.getElementById("output");
+        const form = document.getElementById("uploadForm");
+        const loader = document.getElementById("loader");
+
+        // Show preview before upload
+        imageInput.onchange = () => {
+            const file = imageInput.files[0];
+            preview.src = URL.createObjectURL(file);
+        };
+
+        // Handle form submit (AJAX)
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const file = imageInput.files[0];
+            const formData = new FormData();
+            formData.append("image", file);
+
+            loader.style.display = "block";
+
+            const response = await fetch("/remove", {
+                method: "POST",
+                body: formData
+            });
+
+            const blob = await response.blob();
+            output.src = URL.createObjectURL(blob);
+
+            loader.style.display = "none";
+        };
+    </script>
+
+</body>
+</html>
