@@ -1,0 +1,7 @@
+cd C:\Users\adity\OneDrive\Desktop\resume\resume\backgroundremover
+
+
+env\Scripts\activate
+
+
+python app.py
